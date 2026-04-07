@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_Preview__preview_start",
+      "Bash(node -e \"const l = require\\(''''./node_modules/lucide-react''''\\); [''''Instagram'''',''''Twitter'''',''''Linkedin'''',''''Github''''].forEach\\(n => console.log\\(n, '''':'''', !!l[n]\\)\\)\")",
+      "Read(//Users/faiselhabib/Desktop/Gird/Gird App/Visual Identity/Logo/**)",
+      "Read(//Users/faiselhabib/Desktop/Gird/Gird App/Visual Identity/**)",
+      "Bash(cp \"/Users/faiselhabib/Desktop/Gird/Gird App/Visual Identity/Logo/SVG/Logo.svg\" /Users/faiselhabib/Documents/girdweb/public/logo.svg)",
+      "Bash(for i:*)",
+      "Bash(do cp:*)",
+      "Bash(echo \"copied $i\")",
+      "Bash(done)"
+    ]
+  }
+}
