@@ -21,7 +21,21 @@
       "Bash(npx node -e \":*)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://ivpobeyraeajhxbmlhst.supabase.co/rest/v1/waitlist?select=count&limit=1\" -H \"apikey: sb_publishable_qStCKTMjWzAmFGLnpQTFZA_N5brYC5K\" -H \"Authorization: Bearer sb_publishable_qStCKTMjWzAmFGLnpQTFZA_N5brYC5K\")",
       "Bash(curl -s -D - -o /dev/null \"https://ivpobeyraeajhxbmlhst.supabase.co/rest/v1/waitlist?select=*\" -H \"apikey: sb_publishable_qStCKTMjWzAmFGLnpQTFZA_N5brYC5K\" -H \"Authorization: Bearer sb_publishable_qStCKTMjWzAmFGLnpQTFZA_N5brYC5K\" -H \"Prefer: count=exact\")",
-      "Bash(npx --yes acorn --ecma2020 --module src/components/landing/WaitlistForm.jsx)"
+      "Bash(npx --yes acorn --ecma2020 --module src/components/landing/WaitlistForm.jsx)",
+      "Bash(npx --yes sharp-cli --input public/logo.svg --output public/favicon-32x32.png resize 32 32)",
+      "Bash(/usr/bin/python3 -c \"import cairosvg; print\\(''cairosvg''\\)\")",
+      "Bash(/usr/bin/python3 -c \"from PIL import Image; print\\(''pillow''\\)\")",
+      "Bash(/usr/bin/python3 -c \"import xml.etree.ElementTree; print\\(''xml ok''\\)\")",
+      "Bash(qlmanage -t -s 180 -o /tmp/ql_out public/logo.svg)",
+      "Read(//tmp/**)",
+      "Bash(mkdir -p /tmp/ql_out)",
+      "Bash(qlmanage -t -s 180 -o /tmp/ql_out /Users/faiselhabib/Documents/girdweb/public/logo.svg)",
+      "Bash(sips -g pixelWidth -g pixelHeight /Users/faiselhabib/Documents/girdweb/public/favicon-32x32.png /Users/faiselhabib/Documents/girdweb/public/favicon-16x16.png /Users/faiselhabib/Documents/girdweb/public/apple-touch-icon.png)",
+      "Bash(__NEW_LINE_04ba8de4c50dd1b3__ SRC=\"/tmp/ql_favicon/App icon.svg.png\")",
+      "Bash(PUB=\"/Users/faiselhabib/Documents/girdweb/public\")",
+      "Bash(__NEW_LINE_04ba8de4c50dd1b3__ cp:*)",
+      "Bash(sips -z 32 32 \"$SRC\" --out \"$PUB/favicon-32x32.png\")",
+      "Bash(sips -z 16 16 \"$SRC\" --out \"$PUB/favicon-16x16.png\")"
     ]
   }
 }
