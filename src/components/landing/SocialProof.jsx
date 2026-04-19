@@ -10,12 +10,10 @@ export default function SocialProof() {
           {/* Text */}
           <div className="text-center md:text-right flex-1">
             <p className="text-lg sm:text-xl font-bold mb-2">
-              انضم لأكثر من{' '}
-              <span style={{ color: ORANGE }}>2,000+</span>
-              {' '}لاعب سجّلوا مسبقاً
+              انضم للاعبين بدأوا التسجيل في جدة 🎾
             </p>
             <p className="text-sm text-gray-400">
-              من الرياض، جدة، الدمام، وأكثر من 15 مدينة سعودية
+              الإطلاق يبدأ من جدة — ونتوسع قريبًا
             </p>
           </div>
 
@@ -31,19 +29,16 @@ export default function SocialProof() {
               ))}
               <div className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold border-2 border-[#1e1e1e]"
                    style={{ background: BLUE, color: '#fff' }}>
-                +2K
+                +
               </div>
             </div>
 
             {/* City badges */}
             <div className="hidden sm:flex flex-wrap gap-2">
-              {['الرياض', 'جدة', 'الدمام'].map(c => (
-                <span key={c}
-                      className="text-xs font-medium rounded-full px-3 py-1"
-                      style={{ background: `${GREEN}15`, color: GREEN, border: `1px solid ${GREEN}30` }}>
-                  {c}
-                </span>
-              ))}
+              <span className="text-xs font-medium rounded-full px-3 py-1"
+                    style={{ background: `${GREEN}15`, color: GREEN, border: `1px solid ${GREEN}30` }}>
+                جدة
+              </span>
             </div>
           </div>
         </div>

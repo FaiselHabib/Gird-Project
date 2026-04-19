@@ -2,11 +2,11 @@ import { Check } from 'lucide-react'
 import { ORANGE, CARD } from '../../lib/constants'
 
 const BENEFITS = [
-  { title: 'امتلئ ملاعبك تلقائياً', desc: 'وصول لآلاف اللاعبين الباحثين عن ملاعب قريبة.' },
-  { title: 'مدفوعات رقمية فورية', desc: 'استقبل الدفعات أونلاين — لا نقد، لا متابعة.' },
-  { title: 'لوحة إدارة بالوقت الحقيقي', desc: 'تابع الحجوزات والإيرادات من مكان واحد.' },
-  { title: 'تحليلات ذكية', desc: 'اعرف أوقات الذروة، أنماط اللاعبين، ومعدلات الإشغال.' },
-  { title: 'صفر عمولة للملاك المبكرين', desc: 'انضم الآن واستفد من فترة الإطلاق بدون رسوم.' },
+  { title: 'إدارة حجوزاتك في مكان واحد', desc: 'تابع جميع الحجوزات بشكل واضح ومنظم بدون مكالمات أو جداول مشتتة.' },
+  { title: 'تقليل الإلغاء والفوضى', desc: 'نظام واضح يساعدك تقلل التخبط في المواعيد ويخلي كل شيء مرتب.' },
+  { title: 'زيادة استخدام الملعب', desc: 'خلّي اللاعبين يوصلون لك بسهولة ويعبيّون الأوقات الفاضية.' },
+  { title: 'تجربة احترافية للاعبين', desc: 'قدّم تجربة حجز واضحة وسريعة تعكس مستوى ملعبك.' },
+  { title: 'بداية بسيطة وتوسع لاحقًا', desc: 'ابدأ بإدارة الحجوزات، ومع الوقت نضيف أدوات أقوى تساعدك تكبر.' },
 ]
 
 export default function ForOwners() {
@@ -21,10 +21,10 @@ export default function ForOwners() {
               لمالكي الملاعب
             </span>
             <h2 className="text-3xl sm:text-4xl font-bold mb-4 leading-tight">
-              امتلئ ملاعبك، لا جداول بعد اليوم.
+              خل إدارة ملعبك أسهل.
             </h2>
             <p className="text-gray-400 text-base mb-8 leading-relaxed">
-              بدّل الجداول الورقية والاتصالات بنظام رقمي متكامل يزيد حجوزاتك ويبسّط إدارتك.
+              قرد يساعدك تنظم الحجوزات، تقلل الفوضى، وتقدم تجربة أفضل للاعبين — بدون تعقيد.
             </p>
 
             <ul className="space-y-4">
@@ -54,12 +54,12 @@ export default function ForOwners() {
                  style={{ background: 'rgba(30,30,30,0.85)', border: '1px solid rgba(255,255,255,0.1)' }}>
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
-                  <p className="text-lg font-bold" style={{ color: ORANGE }}>94%</p>
-                  <p className="text-[10px] text-gray-400">معدل الإشغال</p>
+                  <p className="text-lg font-bold" style={{ color: ORANGE }}>سهل</p>
+                  <p className="text-[10px] text-gray-400">إدارة الحجوزات</p>
                 </div>
                 <div>
-                  <p className="text-lg font-bold" style={{ color: ORANGE }}>+120</p>
-                  <p className="text-[10px] text-gray-400">حجز/شهر</p>
+                  <p className="text-lg font-bold" style={{ color: ORANGE }}>أقل</p>
+                  <p className="text-[10px] text-gray-400">فوضى ومكالمات</p>
                 </div>
                 <div>
                   <p className="text-lg font-bold" style={{ color: ORANGE }}>0%</p>

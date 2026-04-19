@@ -1,7 +1,19 @@
+import { useState, useEffect } from 'react'
 import { ChevronRight } from 'lucide-react'
 import { ORANGE, YELLOW } from '../../lib/constants'
+import { supabase, supabaseReady } from '../../lib/supabase'
 
 export default function Hero() {
+  const [waitlistCount, setWaitlistCount] = useState(null)
+
+  useEffect(() => {
+    if (!supabaseReady) return
+    supabase
+      .from('waitlist')
+      .select('*', { count: 'exact', head: true })
+      .then(({ count }) => { if (count !== null) setWaitlistCount(count) })
+  }, [])
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
       {/* Background */}
@@ -27,9 +39,9 @@ export default function Hero() {
         </h1>
 
         <p className="animate-fade-up-d2 text-base sm:text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-10 leading-relaxed">
-          احجز ملعبك، كفّل العدد، وطوّر لعبتك —
+          اكتشف ملاعب، كوّن فريقك، وخلك جاهز لأول إطلاق رسمي.
           <br className="hidden sm:block" />
-          كل شي في مكان واحد.
+          كل شيء في مكان واحد.
         </p>
 
         {/* CTAs */}
@@ -49,16 +61,21 @@ export default function Hero() {
 
         {/* Stats */}
         <div className="animate-fade-up-d3 mt-16 grid grid-cols-3 gap-4 max-w-lg mx-auto">
-          {[
-            { n: '+500', l: 'ملعب مسجّل' },
-            { n: '+2,000', l: 'لاعب بالانتظار' },
-            { n: '3×', l: 'أسرع في الحجز' },
-          ].map(s => (
-            <div key={s.l} className="text-center">
-              <p className="text-2xl sm:text-3xl font-bold" style={{ color: YELLOW }}>{s.n}</p>
-              <p className="text-xs sm:text-sm text-gray-400 mt-1">{s.l}</p>
-            </div>
-          ))}
+          <div className="text-center">
+            <p className="text-2xl sm:text-3xl font-bold" style={{ color: YELLOW }}>
+              +{waitlistCount ?? '...'}
+            </p>
+            <p className="text-xs sm:text-sm text-gray-400 mt-1">لاعب مسجل</p>
+          </div>
+          <div className="text-center">
+            <p className="text-2xl sm:text-3xl font-bold" style={{ color: YELLOW }}>—</p>
+            <p className="text-xs sm:text-sm text-gray-400 mt-1">تسجيل الملاعب قيد الإطلاق</p>
+          </div>
+          <div className="text-center">
+            <p className="text-2xl sm:text-3xl font-bold" style={{ color: YELLOW }}>×3</p>
+            <p className="text-xs sm:text-sm text-gray-400 mt-1">أسرع في الحجز</p>
+            <p className="text-xs text-gray-500 mt-0.5">واجهة أبسط وتجربة أسرع</p>
+          </div>
         </div>
       </div>
 

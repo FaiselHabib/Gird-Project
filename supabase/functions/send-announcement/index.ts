@@ -115,12 +115,13 @@ serve(async (req: Request) => {
     /* ── 4. Send in batches of 100 ── */
     let totalSent   = 0
     let totalFailed = 0
+    const allFailures: Array<{ email: string; reason: string }> = []
 
     for (let i = 0; i < emails.length; i += BATCH_SIZE) {
       const chunk = emails.slice(i, i + BATCH_SIZE)
 
       const payload = chunk.map((email: string) => ({
-        from: 'Gird <onboarding@resend.dev>',
+        from: 'Gird <noreply@gird.sa>',
         to: [email],
         subject: subject.trim(),
         html: htmlBody,
@@ -135,12 +136,35 @@ serve(async (req: Request) => {
         body: JSON.stringify(payload),
       })
 
-      if (res.ok) {
+      // Always parse the body — Resend returns per-email results even on HTTP 200
+      const rawText = await res.text()
+      let resData: Record<string, unknown> = {}
+      try { resData = JSON.parse(rawText) } catch (_) { /* non-JSON body */ }
+
+      const perEmail = resData?.data as Array<Record<string, unknown>> | undefined
+
+      if (perEmail && perEmail.length > 0) {
+        // Resend returned a per-email result array — inspect each item individually
+        perEmail.forEach((item, idx) => {
+          if (item?.id) {
+            totalSent++
+          } else {
+            totalFailed++
+            const errObj  = item?.error as Record<string, unknown> | undefined
+            const reason  = (errObj?.message ?? item?.message ?? `HTTP ${res.status}`) as string
+            allFailures.push({ email: chunk[idx], reason })
+            console.error(`[Resend] Failed for ${chunk[idx]}:`, reason)
+          }
+        })
+      } else if (res.ok) {
+        // OK response but no data array (unexpected shape) — assume all sent
         totalSent += chunk.length
       } else {
-        const errText = await res.text()
-        console.error(`[Resend] Batch ${i / BATCH_SIZE + 1} failed:`, errText)
+        // Whole batch rejected by Resend (e.g. bad API key, rate limit)
+        const errMsg = (resData?.message ?? resData?.error ?? `HTTP ${res.status}`) as string
+        console.error(`[Resend] Batch ${i / BATCH_SIZE + 1} rejected:`, errMsg)
         totalFailed += chunk.length
+        chunk.forEach((email: string) => allFailures.push({ email, reason: errMsg }))
       }
     }
 
@@ -162,7 +186,7 @@ serve(async (req: Request) => {
     if (logErr) console.error('[DB] Log error:', logErr)
 
     /* ── 6. Respond ── */
-    return json({ success: true, sent: totalSent, failed: totalFailed, status })
+    return json({ success: true, sent: totalSent, failed: totalFailed, status, failures: allFailures })
 
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Unexpected error'

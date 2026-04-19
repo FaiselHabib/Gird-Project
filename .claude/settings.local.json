@@ -10,7 +10,18 @@
       "Bash(do cp:*)",
       "Bash(echo \"copied $i\")",
       "Bash(done)",
-      "Bash(/Users/faiselhabib/Documents/girdweb/.env.local:*)"
+      "Bash(/Users/faiselhabib/Documents/girdweb/.env.local:*)",
+      "Bash(cp \"/Users/faiselhabib/Downloads/Home Page.png\" /Users/faiselhabib/Documents/girdweb/public/app/screen-home.png)",
+      "Bash(cp \"/Users/faiselhabib/Downloads/Matches.png\" /Users/faiselhabib/Documents/girdweb/public/app/screen-matches.png)",
+      "Bash(cp \"/Users/faiselhabib/Downloads/Tournaments.png\" /Users/faiselhabib/Documents/girdweb/public/app/screen-tournaments.png)",
+      "Bash(cp \"/Users/faiselhabib/Downloads/Trainers.png\" /Users/faiselhabib/Documents/girdweb/public/app/screen-trainers.png)",
+      "Bash(cp \"/Users/faiselhabib/Downloads/Bookings.png\" /Users/faiselhabib/Documents/girdweb/public/app/screen-courts.png)",
+      "Bash(find /Users/faiselhabib/Documents/girdweb -name *.env* -o -name .env*)",
+      "Bash(node -e \":*)",
+      "Bash(npx node -e \":*)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://ivpobeyraeajhxbmlhst.supabase.co/rest/v1/waitlist?select=count&limit=1\" -H \"apikey: sb_publishable_qStCKTMjWzAmFGLnpQTFZA_N5brYC5K\" -H \"Authorization: Bearer sb_publishable_qStCKTMjWzAmFGLnpQTFZA_N5brYC5K\")",
+      "Bash(curl -s -D - -o /dev/null \"https://ivpobeyraeajhxbmlhst.supabase.co/rest/v1/waitlist?select=*\" -H \"apikey: sb_publishable_qStCKTMjWzAmFGLnpQTFZA_N5brYC5K\" -H \"Authorization: Bearer sb_publishable_qStCKTMjWzAmFGLnpQTFZA_N5brYC5K\" -H \"Prefer: count=exact\")",
+      "Bash(npx --yes acorn --ecma2020 --module src/components/landing/WaitlistForm.jsx)"
     ]
   }
 }

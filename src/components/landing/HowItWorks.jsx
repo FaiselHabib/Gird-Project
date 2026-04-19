@@ -1,27 +1,34 @@
-import { Search, Users, Trophy } from 'lucide-react'
+import { CalendarCheck, Users, Trophy, Dumbbell } from 'lucide-react'
 import { ORANGE, BLUE, GREEN, YELLOW, CARD } from '../../lib/constants'
 
-const STEPS = [
+const FEATURES = [
   {
-    icon: Search,
+    icon: CalendarCheck,
     color: BLUE,
-    title: 'ابحث عن ملعب أو مباراة',
-    desc: 'تصفّح الملاعب القريبة منك أو انضم لمباريات مفتوحة حسب موقعك ورياضتك المفضلة.',
+    title: 'احجز ملعبك بسهولة',
+    desc: 'تصفح الملاعب المتاحة في جدة واحجز في ثواني بدون مكالمات أو تنسيق يدوي.',
     num: '01',
   },
   {
     icon: Users,
     color: ORANGE,
-    title: 'انضم أو أنشئ لعبة',
-    desc: 'كفّل العدد مع لاعبين بمستواك، أو أنشئ مباراتك الخاصة وادعُ أصدقائك.',
+    title: 'أنشئ أو انضم لمباراة',
+    desc: 'ابحث عن لاعبين بنفس مستواك أو أنشئ لعبتك الخاصة وكمل العدد بسهولة.',
     num: '02',
   },
   {
     icon: Trophy,
     color: GREEN,
-    title: 'العب وطوّر مستواك',
-    desc: 'تابع إحصائياتك، شارك في البطولات، وارتقِ في التصنيف بين أفضل اللاعبين.',
+    title: 'شارك في بطولات منظمة',
+    desc: 'انضم لبطولات جاهزة وتابع تقدمك عبر نظام الشجرة لمعرفة النتائج لحظة بلحظة.',
     num: '03',
+  },
+  {
+    icon: Dumbbell,
+    color: YELLOW,
+    title: 'تدرّب مع محترفين',
+    desc: 'احجز جلسات تدريب مع مدربين معتمدين وطور مستواك بشكل أسرع.',
+    num: '04',
   },
 ]
 
@@ -36,16 +43,16 @@ export default function HowItWorks() {
             كيف يعمل قرد؟
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-            ثلاث خطوات فقط
+            كل شيء تحتاجه للعب… في مكان واحد
           </h2>
           <p className="text-gray-400 text-base sm:text-lg max-w-xl mx-auto">
-            من البحث للعب في دقائق — بدون اتصالات أو تنسيق معقد.
+            قرد يجمع لك تجربة اللعب كاملة — من الحجز إلى البطولات، بدون تعقيد.
           </p>
         </div>
 
-        {/* Steps */}
-        <div className="grid md:grid-cols-3 gap-6">
-          {STEPS.map((s, i) => (
+        {/* Feature cards */}
+        <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
+          {FEATURES.map((s, i) => (
             <div key={i}
                  className="relative rounded-3xl p-8 group transition-transform hover:-translate-y-1"
                  style={{ background: CARD, border: '1px solid rgba(255,255,255,0.07)' }}>
@@ -63,12 +70,6 @@ export default function HowItWorks() {
 
               <h3 className="text-xl font-bold mb-3">{s.title}</h3>
               <p className="text-sm text-gray-400 leading-relaxed">{s.desc}</p>
-
-              {/* Connector line (not on last) */}
-              {i < 2 && (
-                <div className="hidden md:block absolute top-1/2 -left-3 w-6 h-px"
-                     style={{ background: 'rgba(255,255,255,0.1)' }} />
-              )}
             </div>
           ))}
         </div>

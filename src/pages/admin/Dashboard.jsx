@@ -6,6 +6,7 @@ import {
   LogOut, Search, Users, Send, Clock,
   ChevronDown, ChevronUp, Download, RefreshCw,
   Check, AlertCircle, Loader2, Mail, Filter, MapPin, User, X,
+  Trash2, BarChart2, Eye, EyeOff,
 } from 'lucide-react'
 
 /* ─── Helpers ─── */
@@ -167,6 +168,18 @@ export default function AdminDashboard() {
   const [sendError, setSendError]     = useState('')
   const [sendResult, setSendResult]   = useState(null)
 
+  /* Launch progress config */
+  const LAUNCH_DEFAULT = { visible: true, title: '🚀 قرد قادم قريبًا', subtitle: 'نقترب من الإطلاق الرسمي', percentage: 60 }
+  const [launchConfig, setLaunchConfig]       = useState(LAUNCH_DEFAULT)
+  const [launchSaving, setLaunchSaving]       = useState(false)
+  const [launchSaveStatus, setLaunchSaveStatus] = useState('idle') // idle | saved | error
+  const [launchSaveError, setLaunchSaveError]  = useState('')
+
+  /* Reset pre-launch data */
+  const [resetPhase, setResetPhase]   = useState('idle')   // idle | confirming | resetting | done | error
+  const [resetConfirm, setResetConfirm] = useState('')
+  const [resetError, setResetError]   = useState('')
+
   const searchTimer = useRef(null)
 
   /* ── Get current user ── */
@@ -206,8 +219,73 @@ export default function AdminDashboard() {
     setLoadingAnno(false)
   }, [])
 
+  /* ── Fetch + save launch config ── */
+  const fetchLaunchConfig = useCallback(async () => {
+    const { data } = await supabase
+      .from('app_config')
+      .select('is_visible, title, subtitle, progress')
+      .eq('id', 1)
+      .maybeSingle()
+    if (data) setLaunchConfig(prev => ({
+      ...prev,
+      visible:    data.is_visible  ?? prev.visible,
+      title:      data.title       ?? prev.title,
+      subtitle:   data.subtitle    ?? prev.subtitle,
+      percentage: data.progress    ?? prev.percentage,
+    }))
+  }, [])
+
+  const handleSaveLaunchConfig = async () => {
+    setLaunchSaving(true)
+    setLaunchSaveError('')
+    const { error } = await supabase.from('app_config')
+      .upsert(
+        {
+          id:         1,
+          is_visible: launchConfig.visible,
+          title:      launchConfig.title,
+          subtitle:   launchConfig.subtitle,
+          progress:   launchConfig.percentage,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: 'id' }
+      )
+    setLaunchSaving(false)
+    if (error) {
+      const msg = `[${error.code}] ${error.message}`
+      console.error('app_config upsert failed:', msg)
+      setLaunchSaveError(msg)
+      setLaunchSaveStatus('error')
+    } else {
+      setLaunchSaveStatus('saved')
+    }
+    setTimeout(() => setLaunchSaveStatus('idle'), 3000)
+  }
+
+  /* ── Reset pre-launch data ── */
+  const handleReset = async () => {
+    if (resetConfirm.trim() !== 'حذف') return
+    setResetPhase('resetting')
+    const { error } = await supabase.rpc('reset_prelaunch_data')
+    if (error) {
+      console.error('reset_prelaunch_data RPC failed:', error.code, error.message)
+      setResetPhase('error')
+      setResetError(error.message)
+    } else {
+      setResetPhase('done')
+      setResetConfirm('')
+      setSearch('')
+      setCityFilter('')
+      setTypeFilter('')
+      fetchSubs('', sort, '', '')
+      fetchAnnouncements()
+      setTimeout(() => setResetPhase('idle'), 4000)
+    }
+  }
+
   useEffect(() => { fetchSubs(search, sort, cityFilter, typeFilter) }, [sort, cityFilter, typeFilter])
   useEffect(() => { fetchAnnouncements() }, [fetchAnnouncements])
+  useEffect(() => { fetchLaunchConfig() }, [fetchLaunchConfig])
 
   /* ── Debounced search ── */
   const handleSearchChange = (val) => {
@@ -367,6 +445,110 @@ export default function AdminDashboard() {
           />
         </div>
 
+        {/* ── Launch Progress Control ── */}
+        <div style={{ ...cardStyle, marginBottom: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <BarChart2 size={18} style={{ color: YELLOW }} />
+              <div>
+                <h2 style={{ fontSize: 16, fontWeight: 700, margin: 0 }}>شريط تقدم الإطلاق</h2>
+                <p style={{ fontSize: 12, color: '#555', margin: '2px 0 0 0' }}>يظهر في صفحة التسجيل بعد إتمام الاشتراك</p>
+              </div>
+            </div>
+            {/* Visibility toggle */}
+            <button
+              onClick={() => setLaunchConfig(c => ({ ...c, visible: !c.visible }))}
+              style={{
+                ...ghostBtn,
+                color: launchConfig.visible ? GREEN : '#555',
+                borderColor: launchConfig.visible ? `${GREEN}40` : 'rgba(255,255,255,0.08)',
+              }}>
+              {launchConfig.visible ? <Eye size={14} /> : <EyeOff size={14} />}
+              {launchConfig.visible ? 'ظاهر' : 'مخفي'}
+            </button>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 14 }}>
+            <div>
+              <label style={{ display: 'block', fontSize: 12, color: '#94A3B8', marginBottom: 6 }}>العنوان</label>
+              <input
+                type="text"
+                value={launchConfig.title}
+                onChange={e => setLaunchConfig(c => ({ ...c, title: e.target.value }))}
+                style={inputBase}
+                maxLength={80}
+              />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: 12, color: '#94A3B8', marginBottom: 6 }}>النص المساند</label>
+              <input
+                type="text"
+                value={launchConfig.subtitle}
+                onChange={e => setLaunchConfig(c => ({ ...c, subtitle: e.target.value }))}
+                style={inputBase}
+                maxLength={100}
+              />
+            </div>
+          </div>
+
+          {/* Percentage slider */}
+          <div style={{ marginBottom: 18 }}>
+            <label style={{ display: 'block', fontSize: 12, color: '#94A3B8', marginBottom: 8 }}>
+              نسبة التقدم:
+              <span style={{ color: YELLOW, fontWeight: 700, marginRight: 6 }}>{launchConfig.percentage}%</span>
+            </label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+              <input
+                type="range" min={0} max={100} step={1}
+                value={launchConfig.percentage}
+                onChange={e => setLaunchConfig(c => ({ ...c, percentage: Number(e.target.value) }))}
+                style={{ flex: 1, accentColor: ORANGE }}
+              />
+              <input
+                type="number" min={0} max={100}
+                value={launchConfig.percentage}
+                onChange={e => setLaunchConfig(c => ({ ...c, percentage: Math.min(100, Math.max(0, Number(e.target.value))) }))}
+                style={{ ...inputBase, width: 68, textAlign: 'center' }}
+              />
+            </div>
+            {/* Live preview bar */}
+            <div style={{ marginTop: 10, height: 8, borderRadius: 99, background: 'rgba(255,255,255,0.07)', overflow: 'hidden' }}>
+              <div style={{
+                height: '100%', borderRadius: 99, transition: 'width 0.3s ease',
+                width: `${launchConfig.percentage}%`,
+                background: `linear-gradient(to left, ${ORANGE}, ${YELLOW})`,
+              }} />
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <button
+              onClick={handleSaveLaunchConfig}
+              disabled={launchSaving}
+              style={{
+                background: BLUE, color: '#fff', border: 'none',
+                borderRadius: 50, padding: '10px 24px', fontSize: 14, fontWeight: 700,
+                cursor: launchSaving ? 'not-allowed' : 'pointer', opacity: launchSaving ? 0.7 : 1,
+                display: 'flex', alignItems: 'center', gap: 8, fontFamily: FONT,
+                transition: 'opacity 0.15s',
+              }}>
+              {launchSaving
+                ? <><Loader2 size={14} style={{ animation: 'spin 0.8s linear infinite' }} />جاري الحفظ...</>
+                : 'حفظ الإعدادات'}
+            </button>
+            {launchSaveStatus === 'saved' && (
+              <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 13, color: GREEN }}>
+                <Check size={14} /> تم الحفظ
+              </span>
+            )}
+            {launchSaveStatus === 'error' && (
+              <span style={{ fontSize: 12, color: '#DC3545', maxWidth: 360, lineHeight: 1.4 }}>
+                فشل الحفظ: {launchSaveError || 'خطأ غير معروف'}
+              </span>
+            )}
+          </div>
+        </div>
+
         {/* ── Waitlist Table ── */}
         <div style={{ ...cardStyle, marginBottom: 24 }}>
           {/* Header */}
@@ -509,10 +691,39 @@ export default function AdminDashboard() {
                   <Check size={24} style={{ color: GREEN }} />
                 </div>
                 <p style={{ color: '#fff', fontWeight: 700, fontSize: 16, margin: '0 0 6px 0' }}>تم الإرسال بنجاح!</p>
-                <p style={{ color: '#94A3B8', fontSize: 13, margin: '0 0 18px 0' }}>
+                <p style={{ color: '#94A3B8', fontSize: 13, margin: '0 0 12px 0' }}>
                   أُرسل إلى {(sendResult?.sent ?? 0).toLocaleString('ar-SA')} مشترك
-                  {sendResult?.failed > 0 && ` — فشل ${sendResult.failed}`}
+                  {sendResult?.failed > 0 && (
+                    <span style={{ color: '#DC3545' }}> — فشل {sendResult.failed}</span>
+                  )}
                 </p>
+
+                {/* Per-email failure detail */}
+                {sendResult?.failures?.length > 0 && (
+                  <div style={{
+                    background: 'rgba(220,53,69,0.07)',
+                    border: '1px solid rgba(220,53,69,0.2)',
+                    borderRadius: 10, padding: '12px 14px',
+                    marginBottom: 16, textAlign: 'right',
+                  }}>
+                    <p style={{ fontSize: 11, fontWeight: 700, color: '#DC3545', margin: '0 0 8px 0', textTransform: 'uppercase', letterSpacing: 0.8 }}>
+                      تفاصيل الإرسال الفاشل
+                    </p>
+                    {sendResult.failures.map((f, i) => (
+                      <div key={i} style={{
+                        display: 'flex', flexDirection: 'column', gap: 2,
+                        padding: '6px 0',
+                        borderTop: i > 0 ? '1px solid rgba(255,255,255,0.05)' : 'none',
+                      }}>
+                        <span style={{ fontSize: 12, color: '#fff', fontFamily: 'monospace', wordBreak: 'break-all' }} dir="ltr">
+                          {f.email}
+                        </span>
+                        <span style={{ fontSize: 11, color: '#94A3B8', lineHeight: 1.4 }}>{f.reason}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 <button onClick={() => setSendStatus('idle')} style={{ ...ghostBtn, margin: '0 auto', justifyContent: 'center' }}>
                   إرسال إعلان آخر
                 </button>
@@ -655,6 +866,117 @@ export default function AdminDashboard() {
             )}
           </div>
         </div>
+        {/* ── Danger Zone ── */}
+        <div style={{ ...cardStyle, marginTop: 32, border: '1px solid rgba(220,53,69,0.2)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+            <Trash2 size={16} style={{ color: '#DC3545' }} />
+            <h2 style={{ fontSize: 16, fontWeight: 700, margin: 0, color: '#DC3545' }}>منطقة الخطر</h2>
+          </div>
+          <p style={{ fontSize: 13, color: '#555', margin: '0 0 20px 0' }}>
+            إعادة تعيين بيانات ما قبل الإطلاق — لا يمكن التراجع عن هذه العملية.
+          </p>
+
+          {resetPhase === 'done' ? (
+            <div style={{
+              background: `${GREEN}12`, border: `1px solid ${GREEN}35`,
+              borderRadius: 12, padding: '16px 20px',
+              display: 'flex', alignItems: 'center', gap: 10,
+            }}>
+              <Check size={18} style={{ color: GREEN }} />
+              <span style={{ fontSize: 14, color: GREEN, fontWeight: 600 }}>
+                تمت إعادة التعيين بنجاح — قائمة الانتظار فارغة الآن
+              </span>
+            </div>
+          ) : resetPhase === 'error' ? (
+            <div style={{
+              background: 'rgba(220,53,69,0.08)', border: '1px solid rgba(220,53,69,0.3)',
+              borderRadius: 12, padding: '16px 20px',
+              display: 'flex', alignItems: 'flex-start', gap: 12,
+            }}>
+              <AlertCircle size={18} style={{ color: '#DC3545', flexShrink: 0, marginTop: 2 }} />
+              <div>
+                <p style={{ fontSize: 14, color: '#DC3545', fontWeight: 700, margin: '0 0 4px 0' }}>فشل إعادة التعيين</p>
+                <p style={{ fontSize: 13, color: '#94A3B8', margin: '0 0 12px 0', lineHeight: 1.5, wordBreak: 'break-all' }}>{resetError}</p>
+                <button onClick={() => { setResetPhase('confirming'); setResetError('') }} style={ghostBtn}>
+                  حاول مجدداً
+                </button>
+              </div>
+            </div>
+          ) : (resetPhase === 'confirming' || resetPhase === 'resetting') ? (
+            <div style={{ background: 'rgba(220,53,69,0.06)', border: '1px solid rgba(220,53,69,0.2)', borderRadius: 14, padding: '20px' }}>
+              <p style={{ fontSize: 14, color: '#fff', fontWeight: 600, margin: '0 0 6px 0' }}>
+                تأكيد إعادة التعيين
+              </p>
+              <p style={{ fontSize: 13, color: '#94A3B8', margin: '0 0 16px 0', lineHeight: 1.6 }}>
+                سيتم حذف <strong style={{ color: '#fff' }}>جميع مشتركي قائمة الانتظار</strong> وسجل الإعلانات وإعادة تعيين الأرقام التسلسلية.
+                اكتب <strong style={{ color: '#DC3545' }}>حذف</strong> للتأكيد:
+              </p>
+              <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                <input
+                  type="text"
+                  value={resetConfirm}
+                  onChange={e => setResetConfirm(e.target.value)}
+                  placeholder="اكتب: حذف"
+                  style={{ ...inputBase, width: 180, borderColor: resetConfirm === 'حذف' ? '#DC3545' : 'rgba(255,255,255,0.08)' }}
+                  dir="rtl"
+                />
+                <button
+                  onClick={handleReset}
+                  disabled={resetConfirm.trim() !== 'حذف' || resetPhase === 'resetting'}
+                  style={{
+                    background: resetConfirm.trim() === 'حذف' ? '#DC3545' : 'rgba(220,53,69,0.2)',
+                    color: '#fff', border: 'none', borderRadius: 50,
+                    padding: '10px 20px', fontSize: 14, fontWeight: 700,
+                    cursor: resetConfirm.trim() !== 'حذف' ? 'not-allowed' : 'pointer',
+                    display: 'flex', alignItems: 'center', gap: 8, fontFamily: FONT,
+                    transition: 'background 0.2s',
+                  }}>
+                  {resetPhase === 'resetting'
+                    ? <><Loader2 size={14} style={{ animation: 'spin 0.8s linear infinite' }} />جاري المسح...</>
+                    : <><Trash2 size={14} />تأكيد المسح</>}
+                </button>
+                <button
+                  onClick={() => { setResetPhase('idle'); setResetConfirm(''); setResetError('') }}
+                  style={{ ...ghostBtn }}>
+                  إلغاء
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={() => setResetPhase('confirming')}
+              style={{
+                ...ghostBtn,
+                color: '#DC3545',
+                borderColor: 'rgba(220,53,69,0.3)',
+                padding: '10px 20px',
+              }}>
+              <Trash2 size={14} />
+              مسح بيانات ما قبل الإطلاق
+            </button>
+          )}
+
+          {/* What gets reset vs preserved */}
+          <div style={{ marginTop: 20, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div style={{ background: 'rgba(220,53,69,0.05)', borderRadius: 10, padding: '12px 14px' }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: '#DC3545', margin: '0 0 8px 0', textTransform: 'uppercase', letterSpacing: 1 }}>سيتم مسحه</p>
+              {['جميع مشتركي قائمة الانتظار', 'سجل الإعلانات المرسلة', 'رموز الإحالة والبيانات المرتبطة', 'الأرقام التسلسلية (تُعاد من 1)'].map(item => (
+                <p key={item} style={{ fontSize: 12, color: '#94A3B8', margin: '4px 0', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ color: '#DC3545', fontWeight: 700 }}>×</span> {item}
+                </p>
+              ))}
+            </div>
+            <div style={{ background: `${GREEN}08`, borderRadius: 10, padding: '12px 14px' }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: GREEN, margin: '0 0 8px 0', textTransform: 'uppercase', letterSpacing: 1 }}>يبقى سليماً</p>
+              {['حساب المدير وبيانات الدخول', 'إعدادات التطبيق (app_config)', 'كود الموقع والتصميم', 'إعدادات Edge Functions'].map(item => (
+                <p key={item} style={{ fontSize: 12, color: '#94A3B8', margin: '4px 0', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ color: GREEN, fontWeight: 700 }}>✓</span> {item}
+                </p>
+              ))}
+            </div>
+          </div>
+        </div>
+
       </main>
 
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>

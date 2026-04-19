@@ -2,11 +2,11 @@ import { Check, ChevronRight } from 'lucide-react'
 import { BLUE, CARD } from '../../lib/constants'
 
 const BENEFITS = [
-  { title: 'احجز ملاعب 24/7', desc: 'بدون اتصالات أو انتظار — حجز فوري من التطبيق.' },
-  { title: 'كفّل العدد بسهولة', desc: 'انضم للاعبين بمستواك وأكمل فريقك في ثوانٍ.' },
-  { title: 'ادفع وقسّم الحساب', desc: 'دفع رقمي مع تقسيم تلقائي بين اللاعبين.' },
-  { title: 'تابع تطوّرك', desc: 'إحصائيات مبارياتك وتقييمك ومستواك في مكان واحد.' },
-  { title: 'توصيات ذكية', desc: 'ملاعب ومباريات مقترحة حسب موقعك ومستواك.' },
+  { title: 'احجز ملعبك بسهولة', desc: 'بدون مكالمات أو تنسيق — احجز مباشرة من التطبيق في ثواني.' },
+  { title: 'كوّن فريقك بسرعة', desc: 'أنشئ لعبتك أو انضم لمباراة جاهزة وكمل العدد بدون تعب.' },
+  { title: 'انضم لبطولات حقيقية', desc: 'تابع نتائجك وتقدمك من خلال نظام البطولة (الشجرة) بشكل واضح.' },
+  { title: 'كل شيء في مكان واحد', desc: 'ملاعب، مباريات، بطولات، ومدربين — تجربة متكاملة بدون تشتت.' },
+  { title: 'تجربة أسرع وأبسط', desc: 'واجهة واضحة تخليك تركز على اللعب بدل التعقيد.' },
 ]
 
 export default function ForPlayers() {
@@ -29,7 +29,7 @@ export default function ForPlayers() {
                   <span className="text-lg">🎾</span>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-white">مباراة مفتوحة — الرياض</p>
+                  <p className="text-sm font-bold text-white">مباراة مفتوحة — جدة</p>
                   <p className="text-xs text-gray-400">3/4 لاعبين · اليوم 8 مساءً</p>
                 </div>
                 <a href="#waitlist"
@@ -48,10 +48,10 @@ export default function ForPlayers() {
               للاعبين
             </span>
             <h2 className="text-3xl sm:text-4xl font-bold mb-4 leading-tight">
-              لعبتك، بأسلوبك.
+              العب بطريقتك… بدون تعقيد.
             </h2>
             <p className="text-gray-400 text-base mb-8 leading-relaxed">
-              قرد يخلّيك تركّز على اللعب — الباقي علينا. ابحث، احجز، والعب.
+              قرد يجمع لك كل شيء تحتاجه للعب — من حجز الملاعب إلى تكوين فريقك، في تجربة سريعة وواضحة.
             </p>
 
             <ul className="space-y-4">

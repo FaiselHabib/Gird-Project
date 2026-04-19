@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Check, Loader2, Copy, Share2 } from 'lucide-react'
+import { Check, Loader2, Copy, Share2, CheckCircle2 } from 'lucide-react'
 import { supabase, supabaseReady } from '../../lib/supabase'
 import { ORANGE, BLUE, GREEN, YELLOW, CARD, CARD2, CITIES, SPORTS, generateReferralCode } from '../../lib/constants'
 
@@ -15,6 +15,27 @@ export default function WaitlistForm() {
   const [position, setPosition]       = useState(null)
   const [referralCode, setReferralCode] = useState('')
   const [copied, setCopied]           = useState(false)
+
+  // Launch progress config (read from app_config)
+  const LAUNCH_DEFAULT = { visible: true, title: '🚀 قرد قادم قريبًا', subtitle: 'نقترب من الإطلاق الرسمي', percentage: 60 }
+  const [launchConfig, setLaunchConfig] = useState(LAUNCH_DEFAULT)
+
+  useEffect(() => {
+    if (!supabaseReady) return
+    supabase
+      .from('app_config')
+      .select('is_visible, title, subtitle, progress')
+      .eq('id', 1)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data) setLaunchConfig({
+          visible:    data.is_visible  ?? LAUNCH_DEFAULT.visible,
+          title:      data.title       ?? LAUNCH_DEFAULT.title,
+          subtitle:   data.subtitle    ?? LAUNCH_DEFAULT.subtitle,
+          percentage: data.progress    ?? LAUNCH_DEFAULT.percentage,
+        })
+      })
+  }, [])
 
   // Read referral from URL
   const [referredBy, setReferredBy] = useState('')
@@ -43,7 +64,9 @@ export default function WaitlistForm() {
 
     const code = generateReferralCode()
 
-    const { data, error } = await supabase
+    // Step 1: plain insert — no .select() to avoid Prefer: return=representation
+    // which requires a SELECT policy. referral_code is used from the local variable.
+    const { error } = await supabase
       .from('waitlist')
       .insert([{
         email: trimmed,
@@ -53,13 +76,22 @@ export default function WaitlistForm() {
         referral_code: code,
         referred_by: referredBy || null,
       }])
-      .select('position, referral_code')
-      .single()
 
-    if (!error && data) {
+    if (!error) {
+      // Step 2: try to fetch position with a separate query (works if SELECT policy is active)
+      let pos = null
+      try {
+        const { data: row } = await supabase
+          .from('waitlist')
+          .select('position')
+          .eq('referral_code', code)
+          .maybeSingle()
+        pos = row?.position ?? null
+      } catch (_) { /* position is optional — don't block success */ }
+
       setStatus('success')
-      setPosition(data.position)
-      setReferralCode(data.referral_code)
+      setPosition(pos)
+      setReferralCode(code)   // use the locally-generated code, not a DB read-back
       setEmail('')
       return
     }
@@ -67,7 +99,7 @@ export default function WaitlistForm() {
     if (error?.code === '23505') {
       setStatus('duplicate')
     } else {
-      console.error('Supabase error:', error)
+      console.error('Supabase insert error:', error?.code, error?.message)
       setStatus('error')
     }
   }
@@ -82,10 +114,16 @@ export default function WaitlistForm() {
   const shareLink = () => {
     const link = `${window.location.origin}/?ref=${referralCode}`
     if (navigator.share) {
-      navigator.share({ title: 'انضم لقرد', text: 'سجّل في قرد واحصل على وصول مبكر!', url: link })
+      navigator.share({ title: 'انضم لقرد', text: `جرب تطبيق قرد معي 🎾 سجل من هنا: ${link}`, url: link })
     } else {
       copyLink()
     }
+  }
+
+  const shareWhatsApp = () => {
+    const link = `${window.location.origin}/?ref=${referralCode}`
+    const text = encodeURIComponent(`جرب تطبيق قرد معي 🎾 سجل من هنا: ${link}`)
+    window.open(`https://wa.me/?text=${text}`, '_blank')
   }
 
   const selectBase = {
@@ -130,47 +168,90 @@ export default function WaitlistForm() {
           </p>
         </div>
 
-        {/* Success state with position + referral */}
+        {/* Success state */}
         {status === 'success' ? (
-          <div className="rounded-3xl p-8 sm:p-10 text-center"
+          <div className="rounded-3xl p-8 sm:p-10 text-center animate-fade-up"
                style={{ background: CARD, border: '1px solid rgba(255,255,255,0.1)' }}>
+
+            {/* Header */}
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-5"
                  style={{ background: `${GREEN}20` }}>
-              <Check size={30} style={{ color: GREEN }} />
+              <CheckCircle2 size={32} style={{ color: GREEN }} />
             </div>
-            <p className="text-xl font-bold mb-2">أنت في القائمة!</p>
+            <h3 className="text-2xl sm:text-3xl font-black mb-2">تم تسجيلك بنجاح 🔥</h3>
+            <p className="text-gray-400 text-sm mb-8">أنت الآن ضمن قائمة الانتظار</p>
 
+            {/* Position */}
             {position && (
-              <div className="rounded-2xl p-5 my-6 inline-block"
-                   style={{ background: `${ORANGE}10`, border: `1px solid ${ORANGE}30` }}>
-                <p className="text-sm text-gray-400 mb-1">ترتيبك في قائمة الانتظار</p>
-                <p className="text-4xl font-black" style={{ color: ORANGE }}>#{position}</p>
+              <div className="rounded-2xl py-4 px-6 mb-8 inline-flex items-center gap-3"
+                   style={{ background: `${ORANGE}12`, border: `1px solid ${ORANGE}35` }}>
+                <span className="text-sm text-gray-400">رقمك في القائمة:</span>
+                <span className="text-2xl font-black" style={{ color: ORANGE }}>#{position}</span>
               </div>
             )}
 
+            {/* Launch progress — controlled from admin dashboard */}
+            {launchConfig.visible && (
+            <div className="rounded-2xl p-5 mb-8 text-right"
+                 style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
+              <p className="text-sm font-bold mb-3">{launchConfig.title}</p>
+              <div className="relative h-2.5 rounded-full overflow-hidden mb-2"
+                   style={{ background: 'rgba(255,255,255,0.08)' }}>
+                <div className="h-full rounded-full transition-all duration-1000"
+                     style={{ width: `${launchConfig.percentage}%`, background: `linear-gradient(to left, ${ORANGE}, ${YELLOW})` }} />
+              </div>
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-gray-500">{launchConfig.subtitle}</p>
+                <p className="text-xs font-bold" style={{ color: YELLOW }}>{launchConfig.percentage}%</p>
+              </div>
+            </div>
+            )}
+
+            {/* Referral / share */}
             {referralCode && (
-              <div className="mt-6">
-                <p className="text-sm text-gray-400 mb-3">شارك رابطك وتقدّم في القائمة</p>
-                <div className="flex items-center gap-2 max-w-sm mx-auto">
-                  <div className="flex-1 rounded-xl py-3 px-4 text-xs text-gray-300 truncate"
-                       style={{ background: CARD2, border: '1px solid rgba(255,255,255,0.1)' }}>
+              <div>
+                <p className="text-sm font-semibold text-white mb-1">شارك مع أصدقائك 🎾</p>
+                <p className="text-xs text-gray-500 mb-4">ساعد قرد ينمو وكن جزء من المجتمع الأول</p>
+
+                {/* Link box */}
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="flex-1 rounded-xl py-3 px-4 text-xs text-gray-300 truncate text-left"
+                       style={{ background: CARD2, border: '1px solid rgba(255,255,255,0.1)' }}
+                       dir="ltr">
                     {window.location.origin}/?ref={referralCode}
                   </div>
                   <button onClick={copyLink}
                           className="shrink-0 rounded-xl p-3 transition hover:opacity-80"
+                          title="نسخ الرابط"
                           style={{ background: BLUE, color: '#fff' }}>
                     {copied ? <Check size={16} /> : <Copy size={16} />}
                   </button>
+                </div>
+
+                {/* Share buttons */}
+                <div className="grid grid-cols-2 gap-3">
+                  {/* WhatsApp */}
+                  <button onClick={shareWhatsApp}
+                          className="flex items-center justify-center gap-2 rounded-xl py-3 px-4 text-sm font-bold transition hover:opacity-90"
+                          style={{ background: '#25D366', color: '#fff' }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                    واتساب
+                  </button>
+
+                  {/* Native share / fallback copy */}
                   <button onClick={shareLink}
-                          className="shrink-0 rounded-xl p-3 transition hover:opacity-80"
+                          className="flex items-center justify-center gap-2 rounded-xl py-3 px-4 text-sm font-bold transition hover:opacity-90"
                           style={{ background: ORANGE, color: '#fff' }}>
                     <Share2 size={16} />
+                    مشاركة
                   </button>
                 </div>
               </div>
             )}
 
-            <p className="text-sm text-gray-500 mt-6">سنُعلمك بمجرد إطلاق قرد.</p>
+            <p className="text-xs text-gray-600 mt-7">بنبلغك على بريدك فور إطلاق قرد.</p>
           </div>
         ) : (
           /* Form */
@@ -257,7 +338,7 @@ export default function WaitlistForm() {
               )}
               {status === 'error' && !validationErr && (
                 <p className="text-sm text-center" style={{ color: '#DC3545' }}>
-                  حدث خطأ. حاول مجدداً أو تواصل معنا.
+                  لم يتم التسجيل — حاول مرة ثانية أو تواصل معنا.
                 </p>
               )}
             </form>
