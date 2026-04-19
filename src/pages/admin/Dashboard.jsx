@@ -303,8 +303,19 @@ export default function AdminDashboard() {
     setSendResult(null)
 
     try {
-      const { data: { session } } = await supabase.auth.getSession()
+      // getSession() can return a stale cached session with no access_token.
+      // refreshSession() forces a live token fetch from Supabase Auth.
+      let { data: { session }, error: sessionError } = await supabase.auth.getSession()
+
       if (!session?.access_token) {
+        // Try refreshing — covers the case where the cached session is expired/empty
+        const refreshed = await supabase.auth.refreshSession()
+        session = refreshed.data?.session ?? null
+        sessionError = refreshed.error ?? sessionError
+      }
+
+      if (!session?.access_token) {
+        console.error('No valid session after refresh:', sessionError?.message)
         navigate('/admin/login')
         return
       }
