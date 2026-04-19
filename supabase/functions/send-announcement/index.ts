@@ -69,10 +69,14 @@ serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS })
 
   try {
-    /* ── 1. Auth: read token from x-admin-token header ── */
-    const token = req.headers.get('x-admin-token')?.trim()
+    /* ── 1. Auth: read token from Authorization header (preferred) or x-admin-token ── */
+    const authHeader = req.headers.get('authorization') ?? ''
+    const token = authHeader.startsWith('Bearer ')
+      ? authHeader.slice(7).trim()
+      : (req.headers.get('x-admin-token') ?? '').trim()
+
     if (!token) {
-      return json({ error: 'Missing x-admin-token header' }, 401)
+      return json({ error: 'Missing Authorization header' }, 401)
     }
 
     const supabaseAdmin = createClient(
