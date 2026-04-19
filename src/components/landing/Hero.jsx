@@ -62,19 +62,16 @@ export default function Hero() {
         {/* Stats */}
         <div className="animate-fade-up-d3 mt-16 grid grid-cols-3 gap-4 max-w-lg mx-auto">
           <div className="text-center">
-            <p className="text-2xl sm:text-3xl font-bold" style={{ color: YELLOW }}>
-              +{waitlistCount ?? '...'}
-            </p>
-            <p className="text-xs sm:text-sm text-gray-400 mt-1">لاعب مسجل</p>
+            <p className="text-2xl sm:text-3xl font-bold" style={{ color: YELLOW }}>⚡</p>
+            <p className="text-xs sm:text-sm text-gray-400 mt-1">احجز ملعبك خلال ثواني</p>
           </div>
           <div className="text-center">
-            <p className="text-2xl sm:text-3xl font-bold" style={{ color: YELLOW }}>—</p>
-            <p className="text-xs sm:text-sm text-gray-400 mt-1">تسجيل الملاعب قيد الإطلاق</p>
+            <p className="text-2xl sm:text-3xl font-bold" style={{ color: YELLOW }}>🎯</p>
+            <p className="text-xs sm:text-sm text-gray-400 mt-1">كوّن فريقك بسهولة</p>
           </div>
           <div className="text-center">
-            <p className="text-2xl sm:text-3xl font-bold" style={{ color: YELLOW }}>×3</p>
-            <p className="text-xs sm:text-sm text-gray-400 mt-1">أسرع في الحجز</p>
-            <p className="text-xs text-gray-500 mt-0.5">واجهة أبسط وتجربة أسرع</p>
+            <p className="text-2xl sm:text-3xl font-bold" style={{ color: YELLOW }}>🔥</p>
+            <p className="text-xs sm:text-sm text-gray-400 mt-1">العب بدون تعقيد</p>
           </div>
         </div>
       </div>
