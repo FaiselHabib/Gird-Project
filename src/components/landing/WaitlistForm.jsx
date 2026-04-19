@@ -37,13 +37,28 @@ export default function WaitlistForm() {
       })
   }, [])
 
-  // Read referral from URL
-  const [referredBy, setReferredBy] = useState('')
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    const ref = params.get('ref')
-    if (ref) setReferredBy(ref)
-  }, [])
+  // Read referral from URL — with localStorage fallback for hash routing
+  // (#waitlist?ref=CODE loses its params after the router processes the hash)
+  const [referredBy, setReferredBy] = useState(() => {
+    // 1. Standard query string: ?ref=CODE
+    const searchParams = new URLSearchParams(window.location.search)
+    let ref = searchParams.get('ref')
+
+    // 2. Hash routing: #waitlist?ref=CODE
+    if (!ref && window.location.hash.includes('?')) {
+      const hashParams = new URLSearchParams(window.location.hash.split('?')[1])
+      ref = hashParams.get('ref')
+    }
+
+    if (ref) {
+      // Persist so the code survives any subsequent hash navigation
+      localStorage.setItem('gird_referral', ref)
+      return ref
+    }
+
+    // 3. Fallback: already stored from a previous page load
+    return localStorage.getItem('gird_referral') ?? ''
+  })
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -89,6 +104,7 @@ export default function WaitlistForm() {
         pos = row?.position ?? null
       } catch (_) { /* position is optional — don't block success */ }
 
+      localStorage.removeItem('gird_referral')  // consumed — clear so it doesn't persist
       setStatus('success')
       setPosition(pos)
       setReferralCode(code)   // use the locally-generated code, not a DB read-back
