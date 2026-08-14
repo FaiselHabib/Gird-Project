@@ -3,29 +3,29 @@ import { BLUE, YELLOW } from '../../lib/constants'
 const SCREENS = [
   {
     img: '/app/screen-courts.png',
-    title: 'تصفح الملاعب',
-    desc: 'ابحث عن ملعب قريب منك واحجز في ثواني.',
+    title: 'اكتشف الملاعب',
+    desc: 'ابحث عن الملاعب القريبة، قارن الخيارات، واختر المكان المناسب لك.',
     color: BLUE,
     scale: false,
   },
   {
     img: '/app/screen-home.png',
-    title: 'كل شيء في مكان واحد',
-    desc: 'من الحجز إلى المباريات والبطولات — تجربة متكاملة بدون تشتت.',
+    title: 'كل لعبك أمامك',
+    desc: 'ملاعب، مباريات، حجوزات واقتراحات — كل شيء يبدأ من الرئيسية.',
     color: YELLOW,
     scale: true,   // center hero — rendered larger
   },
   {
     img: '/app/screen-matches.png',
-    title: 'العب بدون ما تبحث',
-    desc: 'أنشئ لعبة أو انضم مباشرة — وكمّل فريقك بسهولة.',
+    title: 'العب بدون ما تبحث عن فريق',
+    desc: 'أنشئ مباراة أو انضم لمباراة موجودة وكمل العدد بسهولة.',
     color: BLUE,
     scale: false,
   },
   {
     img: '/app/screen-tournaments.png',
-    title: 'بطولات منظمة بالكامل',
-    desc: 'تابع تقدمك في البطولة بنظام الشجرة واعرف من يتأهل.',
+    title: 'نافس وتابع تقدمك',
+    desc: 'انضم للبطولات، تابع الجدول والنتائج، واعرف خطوتك الجاية.',
     color: BLUE,
     scale: false,
   },
@@ -33,7 +33,7 @@ const SCREENS = [
 
 export default function AppPreview() {
   return (
-    <section className="py-20 sm:py-28 overflow-hidden">
+    <section id="app" className="py-20 sm:py-28 overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="text-center mb-16">
@@ -42,26 +42,25 @@ export default function AppPreview() {
             نظرة على التطبيق
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-            كل شي تحتاجه في <span style={{ color: YELLOW }}>تطبيق واحد</span>
+            كل شيء تحتاجه في <span style={{ color: YELLOW }}>تطبيق واحد</span>
           </h2>
           <p className="text-gray-400 text-base sm:text-lg max-w-xl mx-auto">
-            تجربة سلسة من الحجز إلى اللعب — مصمّمة للاعب السعودي.
+            من اكتشاف الملاعب والحجز إلى المباريات والبطولات — تجربة واحدة مصممة للعب.
           </p>
         </div>
 
-        {/* Phone mockups — 4 cols on md+, 2 cols on sm, 1 on xs */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-4 items-end justify-items-center">
+        {/* Phone mockups — 4 cols on md+, 2 cols on sm, stacked on mobile */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 sm:gap-8 md:gap-4 items-end justify-items-center">
           {SCREENS.map((s, i) => {
             const phoneW = s.scale ? 220 : 190
             const phoneH = s.scale ? 440 : 380
 
             return (
               <div key={i}
-                   className="flex flex-col items-center group"
-                   style={{ transition: 'transform 0.3s ease' }}>
+                   className="flex flex-col items-center group">
                 {/* Phone frame */}
                 <div
-                  className="relative rounded-[2.2rem] overflow-hidden shadow-2xl transition-transform duration-300 group-hover:-translate-y-3"
+                  className="relative rounded-[2.2rem] overflow-hidden transition-transform duration-300 group-hover:-translate-y-2"
                   style={{
                     width: phoneW,
                     height: phoneH,
@@ -73,6 +72,10 @@ export default function AppPreview() {
                       ? `0 0 40px ${YELLOW}20, 0 20px 60px rgba(0,0,0,0.7)`
                       : '0 20px 60px rgba(0,0,0,0.5)',
                   }}>
+                  {/* Hover accent glow */}
+                  <div className="pointer-events-none absolute inset-0 rounded-[1.7rem] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                       style={{ boxShadow: `0 0 0 1px ${s.color}66, 0 0 24px ${s.color}33` }} />
+
                   {/* Notch */}
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10 w-20 h-5 rounded-b-xl"
                        style={{ background: '#0a0a0a' }} />
@@ -82,6 +85,10 @@ export default function AppPreview() {
                     <img
                       src={s.img}
                       alt={s.title}
+                      width={phoneW}
+                      height={phoneH}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover object-top"
                     />
                     {/* Bottom gradient + label */}
@@ -97,9 +104,9 @@ export default function AppPreview() {
                 </div>
 
                 {/* Label below phone */}
-                <div className="mt-5 text-center px-2">
-                  <p className="text-sm font-bold text-white">{s.title}</p>
-                  <p className="text-xs text-gray-500 mt-1 leading-relaxed">{s.desc}</p>
+                <div className="mt-5 text-center px-2 max-w-[220px]">
+                  <p className="text-sm font-bold text-white leading-snug">{s.title}</p>
+                  <p className="text-xs text-gray-400 mt-1 leading-relaxed">{s.desc}</p>
                 </div>
               </div>
             )

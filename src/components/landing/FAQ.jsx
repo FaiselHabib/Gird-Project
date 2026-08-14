@@ -4,28 +4,32 @@ import { ORANGE, YELLOW, CARD } from '../../lib/constants'
 
 const FAQS = [
   {
-    q: 'متى راح يتم إطلاق قرد؟',
-    a: 'نحن حاليًا في مرحلة التسجيل المسبق، وبنبدأ الإطلاق قريبًا بإذن الله. بنبلغك أول ما يكون التطبيق جاهز.',
+    q: 'ما هو قرد؟',
+    a: 'قرد منصة رياضية تجمع حجز الملاعب، المباريات، البطولات والتدريب في تجربة واحدة للاعبين وملاك الملاعب.',
   },
   {
-    q: 'هل قرد متوفر في كل المدن؟',
-    a: 'حاليًا نبدأ من مدينة جدة، ونتوسع لباقي المدن قريبًا.',
+    q: 'كيف أحجز ملعب؟',
+    a: 'اختر الملعب، حدّد الوقت المناسب، وأكمل الحجز مباشرة من التطبيق.',
   },
   {
-    q: 'هل أقدر أحجز ملعب من الآن؟',
-    a: 'لا، حاليًا التسجيل فقط، والحجز بيكون متاح عند الإطلاق الرسمي.',
+    q: 'هل قرد للاعبين فقط؟',
+    a: 'لا. قرد يخدم اللاعبين وملاك الملاعب، ويوفر لكل طرف تجربة وأدوات تناسب احتياجه.',
   },
   {
-    q: 'كيف راح أعرف إذا تم الإطلاق؟',
-    a: 'بنرسل لك رسالة على بريدك أول ما نبدأ الإطلاق، عشان تكون من أوائل المستخدمين.',
+    q: 'كيف يسجل مالك الملعب؟',
+    a: 'يمكن لمالك الملعب التواصل مع فريق قرد لإضافة منشأته وبدء إعداد الملاعب والحجوزات على المنصة.',
+  },
+  {
+    q: 'هل يدعم قرد المباريات والبطولات؟',
+    a: 'نعم. يمكنك إنشاء أو الانضمام إلى المباريات، والمشاركة في البطولات ومتابعة تقدمك ونتائجك.',
   },
   {
     q: 'هل استخدام قرد مجاني؟',
-    a: 'التسجيل حاليًا مجاني، وراح نوضح تفاصيل الاستخدام عند الإطلاق.',
+    a: 'يمكن تصفح واستخدام الخدمات الأساسية في قرد، وقد تختلف الرسوم حسب الحجز أو الخدمة المقدمة.',
   },
   {
-    q: 'وش يميز قرد عن باقي التطبيقات؟',
-    a: 'قرد يجمع لك كل شيء تحتاجه للعب في مكان واحد — من الحجز إلى المباريات والبطولات، بدون تعقيد.',
+    q: 'كيف أتواصل مع الدعم؟',
+    a: 'يمكنك التواصل مع فريق قرد من خلال الدعم داخل التطبيق.',
   },
 ]
 
@@ -36,16 +40,16 @@ function FaqItem({ faq, isOpen, onToggle }) {
            background: isOpen ? CARD : 'transparent',
            border: `1px solid ${isOpen ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)'}`,
          }}>
-      <button onClick={onToggle}
+      <button onClick={onToggle} aria-expanded={isOpen}
               className="w-full flex items-center justify-between gap-4 p-5 text-right cursor-pointer">
         <span className="text-sm sm:text-base font-semibold text-white">{faq.q}</span>
-        <ChevronDown size={18}
+        <ChevronDown size={18} aria-hidden="true"
                      className="shrink-0 text-gray-500 transition-transform duration-200"
                      style={{ transform: isOpen ? 'rotate(180deg)' : 'none' }} />
       </button>
       <div className="overflow-hidden transition-all duration-200"
            style={{ maxHeight: isOpen ? 200 : 0, opacity: isOpen ? 1 : 0 }}>
-        <p className="px-5 pb-5 text-sm text-gray-400 leading-relaxed">{faq.a}</p>
+        <p className="px-5 pb-4 text-sm text-gray-400 leading-relaxed">{faq.a}</p>
       </div>
     </div>
   )

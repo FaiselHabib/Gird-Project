@@ -1,24 +1,12 @@
-import { useState, useEffect } from 'react'
-import { ChevronRight } from 'lucide-react'
 import { ORANGE, YELLOW } from '../../lib/constants'
-import { supabase, supabaseReady } from '../../lib/supabase'
 
 export default function Hero() {
-  const [waitlistCount, setWaitlistCount] = useState(null)
-
-  useEffect(() => {
-    if (!supabaseReady) return
-    supabase
-      .from('waitlist')
-      .select('*', { count: 'exact', head: true })
-      .then(({ count }) => { if (count !== null) setWaitlistCount(count) })
-  }, [])
-
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
       {/* Background */}
       <div className="absolute inset-0">
-        <img src="/photos/6.png" alt="" className="w-full h-full object-cover object-center" />
+        <img src="/photos/6.jpg" alt="" fetchPriority="high" decoding="async"
+             className="w-full h-full object-cover object-center" />
         <div className="absolute inset-0" style={{
           background: 'linear-gradient(to bottom, rgba(25,25,25,0.75) 0%, rgba(25,25,25,0.5) 40%, rgba(25,25,25,0.95) 100%)'
         }} />
@@ -33,29 +21,28 @@ export default function Hero() {
 
         {/* Headline */}
         <h1 className="animate-fade-up-d1 text-4xl sm:text-5xl md:text-7xl font-bold leading-[1.15] mb-6">
-          وين ودّك{' '}
-          <span style={{ color: YELLOW }}>تلعب</span>
-          {' '}اليوم؟
+          كل{' '}
+          <span style={{ color: YELLOW }}>لعبك</span>
+          {' '}في مكان واحد.
         </h1>
 
         <p className="animate-fade-up-d2 text-base sm:text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-10 leading-relaxed">
-          اكتشف ملاعب، كوّن فريقك، وخلك جاهز لأول إطلاق رسمي.
+          احجز ملاعب، كوّن مباريات، شارك في بطولات،
           <br className="hidden sm:block" />
-          كل شيء في مكان واحد.
+          وتابع كل شيء من قرد.
         </p>
 
         {/* CTAs */}
         <div className="animate-fade-up-d3 flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="#waitlist"
-             className="inline-flex items-center justify-center gap-2 rounded-full text-base font-bold px-8 py-4 transition animate-pulse-orange"
-             style={{ background: ORANGE, color: '#fff' }}>
-            انضم لقائمة الانتظار
-            <ChevronRight size={18} className="rotate-180" />
-          </a>
           <a href="#how-it-works"
+             className="inline-flex items-center justify-center gap-2 rounded-full text-base font-bold px-8 py-4 transition hover:opacity-90"
+             style={{ background: ORANGE, color: '#fff' }}>
+            شاهد كيف يعمل
+          </a>
+          <a href="#app"
              className="inline-flex items-center justify-center gap-2 rounded-full text-base font-semibold px-8 py-4 transition hover:bg-white/10"
              style={{ border: '2px solid rgba(255,255,255,0.15)', color: '#fff' }}>
-            كيف يعمل قرد؟
+            استكشف التطبيق
           </a>
         </div>
 
@@ -63,15 +50,15 @@ export default function Hero() {
         <div className="animate-fade-up-d3 mt-16 grid grid-cols-3 gap-4 max-w-lg mx-auto">
           <div className="text-center">
             <p className="text-2xl sm:text-3xl font-bold" style={{ color: YELLOW }}>⚡</p>
-            <p className="text-xs sm:text-sm text-gray-400 mt-1">احجز ملعبك خلال ثواني</p>
+            <p className="text-xs sm:text-sm text-gray-400 mt-1">احجز ملعبك بسهولة</p>
           </div>
           <div className="text-center">
             <p className="text-2xl sm:text-3xl font-bold" style={{ color: YELLOW }}>🎯</p>
-            <p className="text-xs sm:text-sm text-gray-400 mt-1">كوّن فريقك بسهولة</p>
+            <p className="text-xs sm:text-sm text-gray-400 mt-1">كوّن فريقك وانضم للمباريات</p>
           </div>
           <div className="text-center">
             <p className="text-2xl sm:text-3xl font-bold" style={{ color: YELLOW }}>🔥</p>
-            <p className="text-xs sm:text-sm text-gray-400 mt-1">العب بدون تعقيد</p>
+            <p className="text-xs sm:text-sm text-gray-400 mt-1">العب أكثر، بدون تعقيد</p>
           </div>
         </div>
       </div>
