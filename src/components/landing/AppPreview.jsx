@@ -2,28 +2,28 @@ import { BLUE, YELLOW } from '../../lib/constants'
 
 const SCREENS = [
   {
-    img: '/app/screen-courts.png',
+    img: '/app/app-clubs-v2.png',
     title: 'اكتشف الملاعب',
     desc: 'ابحث عن الملاعب القريبة، قارن الخيارات، واختر المكان المناسب لك.',
     color: BLUE,
     scale: false,
   },
   {
-    img: '/app/screen-home.png',
+    img: '/app/app-home-v2.png',
     title: 'كل لعبك أمامك',
     desc: 'ملاعب، مباريات، حجوزات واقتراحات — كل شيء يبدأ من الرئيسية.',
     color: YELLOW,
     scale: true,   // center hero — rendered larger
   },
   {
-    img: '/app/screen-matches.png',
+    img: '/app/app-matches-v2.png',
     title: 'العب بدون ما تبحث عن فريق',
     desc: 'أنشئ مباراة أو انضم لمباراة موجودة وكمل العدد بسهولة.',
     color: BLUE,
     scale: false,
   },
   {
-    img: '/app/screen-tournaments.png',
+    img: '/app/app-tournaments-v2.png',
     title: 'نافس وتابع تقدمك',
     desc: 'انضم للبطولات، تابع الجدول والنتائج، واعرف خطوتك الجاية.',
     color: BLUE,

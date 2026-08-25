@@ -1,5 +1,5 @@
 import { Check } from 'lucide-react'
-import { BLUE, CARD } from '../../lib/constants'
+import { BLUE } from '../../lib/constants'
 
 const BENEFITS = [
   { title: 'احجز ملعبك بسهولة', desc: 'اختر الملعب والوقت المناسب واحجز مباشرة من التطبيق.' },

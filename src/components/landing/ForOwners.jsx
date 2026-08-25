@@ -1,5 +1,6 @@
 import { Check } from 'lucide-react'
-import { ORANGE, CARD } from '../../lib/constants'
+import { ORANGE } from '../../lib/constants'
+import { openIntercom } from '../../lib/intercom'
 
 const BENEFITS = [
   { title: 'إدارة حجوزاتك في مكان واحد', desc: 'تابع الحجوزات والمواعيد بشكل واضح ومنظم بدون مكالمات أو جداول مشتتة.' },
@@ -61,6 +62,14 @@ export default function ForOwners() {
                 </li>
               ))}
             </ul>
+            <button
+              type="button"
+              onClick={() => openIntercom('مرحبًا، أرغب في إضافة ملعبي إلى قرد.')}
+              className="mt-8 inline-flex items-center justify-center rounded-full px-7 py-3.5 text-sm font-bold text-white transition hover:opacity-90 cursor-pointer"
+              style={{ background: ORANGE }}
+            >
+              تواصل مع فريق قرد
+            </button>
           </div>
         </div>
       </div>

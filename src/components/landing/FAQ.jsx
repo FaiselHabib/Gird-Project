@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
-import { ORANGE, YELLOW, CARD } from '../../lib/constants'
+import { YELLOW, CARD } from '../../lib/constants'
+import { openIntercom } from '../../lib/intercom'
 
 const FAQS = [
   {
@@ -9,7 +10,7 @@ const FAQS = [
   },
   {
     q: 'كيف أحجز ملعب؟',
-    a: 'اختر الملعب، حدّد الوقت المناسب، وأكمل الحجز مباشرة من التطبيق.',
+    a: 'عند إطلاق التطبيق، اختر الملعب وحدّد الوقت المناسب، ثم أكمل الحجز مباشرة من قرد.',
   },
   {
     q: 'هل قرد للاعبين فقط؟',
@@ -29,7 +30,8 @@ const FAQS = [
   },
   {
     q: 'كيف أتواصل مع الدعم؟',
-    a: 'يمكنك التواصل مع فريق قرد من خلال الدعم داخل التطبيق.',
+    a: 'يمكنك التواصل مع فريق قرد من خلال المحادثة المباشرة في الموقع أو من داخل التطبيق.',
+    support: true,
   },
 ]
 
@@ -49,7 +51,19 @@ function FaqItem({ faq, isOpen, onToggle }) {
       </button>
       <div className="overflow-hidden transition-all duration-200"
            style={{ maxHeight: isOpen ? 200 : 0, opacity: isOpen ? 1 : 0 }}>
-        <p className="px-5 pb-4 text-sm text-gray-400 leading-relaxed">{faq.a}</p>
+        <div className="px-5 pb-4 text-sm text-gray-400 leading-relaxed">
+          <p>{faq.a}</p>
+          {faq.support && (
+            <button
+              type="button"
+              onClick={() => openIntercom()}
+              className="mt-3 font-bold hover:text-white transition-colors cursor-pointer"
+              style={{ color: YELLOW }}
+            >
+              افتح المحادثة الآن
+            </button>
+          )}
+        </div>
       </div>
     </div>
   )

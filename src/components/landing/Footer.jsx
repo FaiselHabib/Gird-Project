@@ -1,3 +1,5 @@
+import { openIntercom } from '../../lib/intercom'
+
 const LINKS = [
   { label: 'كيف يعمل',    href: '#how-it-works' },
   { label: 'للاعبين',     href: '#players' },
@@ -21,16 +23,16 @@ const InstagramIcon = () => (
   </svg>
 )
 
-const LinkedInIcon = () => (
+const TikTokIcon = () => (
   <svg viewBox="0 0 24 24" width={16} height={16} fill="currentColor" aria-hidden="true">
-    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286ZM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065Zm1.782 13.019H3.555V9h3.564v11.452ZM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003Z"/>
+    <path d="M12.53 1.5c1.02-.02 2.03-.01 3.04-.02.06 1.19.49 2.4 1.36 3.24.87.87 2.1 1.27 3.3 1.4v3.14c-1.12-.04-2.25-.27-3.27-.76-.44-.2-.85-.46-1.26-.72-.01 2.28.01 4.56-.02 6.83-.06 1.09-.42 2.18-1.05 3.08-1.02 1.5-2.8 2.48-4.62 2.51-1.12.06-2.24-.24-3.19-.8-1.58-.93-2.69-2.64-2.85-4.47-.02-.39-.03-.78-.01-1.16.14-1.48.87-2.9 2.01-3.86 1.29-1.12 3.1-1.66 4.79-1.34.02 1.15-.03 2.3-.03 3.45-.77-.25-1.67-.18-2.35.29-.49.32-.86.81-1.06 1.36-.16.39-.11.82-.1 1.23.18 1.24 1.37 2.28 2.64 2.17.85-.01 1.66-.5 2.1-1.22.14-.25.3-.51.31-.81.08-1.38.05-2.75.06-4.13.01-3.1-.01-6.19.02-9.28Z"/>
   </svg>
 )
 
 const SOCIALS = [
-  { label: 'X (تويتر)', href: 'https://x.com/girdappksa', Icon: XIcon },
   { label: 'إنستقرام',  href: 'https://www.instagram.com/girdappksa', Icon: InstagramIcon },
-  { label: 'لينكدإن',   href: 'https://www.linkedin.com/in/gird-social-6b1928428/', Icon: LinkedInIcon },
+  { label: 'تيك توك',   href: 'https://www.tiktok.com/@girdappksa', Icon: TikTokIcon },
+  { label: 'X (تويتر)', href: 'https://x.com/girdappksa', Icon: XIcon },
 ]
 
 export default function Footer() {
@@ -51,6 +53,13 @@ export default function Footer() {
             {LINKS.map(l => (
               <a key={l.href} href={l.href} className="hover:text-white transition-colors">{l.label}</a>
             ))}
+            <button
+              type="button"
+              onClick={() => openIntercom()}
+              className="hover:text-white transition-colors cursor-pointer"
+            >
+              تواصل معنا
+            </button>
           </div>
 
           {/* Social */}
@@ -71,7 +80,7 @@ export default function Footer() {
             © 2026 قرد. جميع الحقوق محفوظة.
           </p>
           <p className="text-xs text-gray-600">
-            صُنع في السعودية 🇸🇦
+            تم تطوير قرد بواسطة Smartech Group
           </p>
         </div>
       </div>

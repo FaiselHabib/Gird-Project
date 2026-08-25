@@ -1,6 +1,11 @@
 import { ORANGE, YELLOW } from '../../lib/constants'
 
 export default function Hero() {
+  const stores = [
+    { name: 'App Store', href: (import.meta.env.VITE_APP_STORE_URL || '').trim() },
+    { name: 'Google Play', href: (import.meta.env.VITE_GOOGLE_PLAY_URL || '').trim() },
+  ].filter(store => store.href)
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
       {/* Background */}
@@ -16,7 +21,7 @@ export default function Hero() {
         {/* Badge */}
         <div className="animate-fade-up inline-flex items-center gap-2 rounded-full px-5 py-2 text-xs font-semibold mb-8"
              style={{ background: 'rgba(43,42,161,0.2)', border: '1px solid rgba(43,42,161,0.5)', color: '#A3C6E6' }}>
-          منصة البادل الأولى في السعودية
+          {stores.length ? 'قرد متوفر الآن' : 'قريبًا على App Store وGoogle Play'}
         </div>
 
         {/* Headline */}
@@ -37,7 +42,7 @@ export default function Hero() {
           <a href="#how-it-works"
              className="inline-flex items-center justify-center gap-2 rounded-full text-base font-bold px-8 py-4 transition hover:opacity-90"
              style={{ background: ORANGE, color: '#fff' }}>
-            شاهد كيف يعمل
+            شاهد كيف يعمل قرد
           </a>
           <a href="#app"
              className="inline-flex items-center justify-center gap-2 rounded-full text-base font-semibold px-8 py-4 transition hover:bg-white/10"
@@ -45,6 +50,22 @@ export default function Hero() {
             استكشف التطبيق
           </a>
         </div>
+
+        {stores.length > 0 && (
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+            {stores.map(store => (
+              <a
+                key={store.name}
+                href={store.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-semibold text-gray-300 underline underline-offset-4 hover:text-white transition-colors"
+              >
+                حمّل من {store.name}
+              </a>
+            ))}
+          </div>
+        )}
 
         {/* Stats */}
         <div className="animate-fade-up-d3 mt-16 grid grid-cols-3 gap-4 max-w-lg mx-auto">

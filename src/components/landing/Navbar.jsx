@@ -39,6 +39,14 @@ export default function Navbar() {
     return () => observer.disconnect()
   }, [])
 
+  // Lock body scroll while the full-screen mobile menu is open.
+  useEffect(() => {
+    if (!open) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = prev }
+  }, [open])
+
   const scrollTop = e => {
     e.preventDefault()
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -88,10 +96,16 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile menu (compact dropdown) */}
+      {/* Mobile menu (full-height overlay below the bar) */}
       {open && (
-        <div id="mobile-menu" className="md:hidden border-t px-4 py-2"
-             style={{ borderColor: 'rgba(255,255,255,0.06)', background: 'rgba(25,25,25,0.97)' }}>
+        <div id="mobile-menu" className="md:hidden fixed top-16 inset-x-0 z-40 border-t px-4 py-2 overflow-y-auto"
+             style={{
+               height: 'calc(100dvh - 4rem)',
+               borderColor: 'rgba(255,255,255,0.06)',
+               background: 'rgba(25,25,25,0.97)',
+               backdropFilter: 'blur(12px)',
+               WebkitBackdropFilter: 'blur(12px)',
+             }}>
           {NAV.map(l => {
             const isActive = active === l.href.slice(1)
             return (
