@@ -1,4 +1,4 @@
-import { Intercom, show, showNewMessage } from '@intercom/messenger-js-sdk'
+import { Intercom, showNewMessage } from '@intercom/messenger-js-sdk'
 
 const INTERCOM_APP_ID = (import.meta.env.VITE_INTERCOM_APP_ID || 'w3m6vw67').trim()
 export const INTERCOM_LAUNCHER_CLASS = 'js-intercom-launcher'
@@ -21,10 +21,5 @@ export function initIntercom() {
 
 export function openIntercom(message = '') {
   initIntercom()
-
-  if (message) {
-    showNewMessage(message)
-  } else {
-    show()
-  }
+  showNewMessage(message)
 }
