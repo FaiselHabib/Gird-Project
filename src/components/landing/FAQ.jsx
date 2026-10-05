@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { YELLOW, CARD } from '../../lib/constants'
-import { openIntercom } from '../../lib/intercom'
+import { INTERCOM_LAUNCHER_CLASS, openIntercom } from '../../lib/intercom'
 
 const FAQS = [
   {
@@ -57,7 +57,7 @@ function FaqItem({ faq, isOpen, onToggle }) {
             <button
               type="button"
               onClick={() => openIntercom()}
-              className="mt-3 font-bold hover:text-white transition-colors cursor-pointer"
+              className={`${INTERCOM_LAUNCHER_CLASS} mt-3 font-bold hover:text-white transition-colors cursor-pointer`}
               style={{ color: YELLOW }}
             >
               افتح المحادثة الآن

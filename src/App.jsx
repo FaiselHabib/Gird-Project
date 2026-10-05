@@ -9,6 +9,7 @@ import AppPreview   from './components/landing/AppPreview'
 import WhyGird      from './components/landing/WhyGird'
 import FAQ          from './components/landing/FAQ'
 import Footer       from './components/landing/Footer'
+import IntercomLauncher from './components/IntercomLauncher'
 import { initIntercom } from './lib/intercom'
 
 export default function App() {
@@ -31,6 +32,7 @@ export default function App() {
         <FAQ />
       </main>
       <Footer />
+      <IntercomLauncher />
     </div>
   )
 }

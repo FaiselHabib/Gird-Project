@@ -1,4 +1,4 @@
-import { openIntercom } from '../../lib/intercom'
+import { INTERCOM_LAUNCHER_CLASS, openIntercom } from '../../lib/intercom'
 
 const LINKS = [
   { label: 'كيف يعمل',    href: '#how-it-works' },
@@ -56,7 +56,7 @@ export default function Footer() {
             <button
               type="button"
               onClick={() => openIntercom()}
-              className="hover:text-white transition-colors cursor-pointer"
+              className={`${INTERCOM_LAUNCHER_CLASS} hover:text-white transition-colors cursor-pointer`}
             >
               تواصل معنا
             </button>
