@@ -19,7 +19,7 @@ export function initIntercom() {
   })
 }
 
-export function openIntercom(message = '') {
+export function openIntercom(message = 'مرحبًا، أحتاج مساعدة من فريق قرد.') {
   initIntercom()
   showNewMessage(message)
 }
