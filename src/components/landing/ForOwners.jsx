@@ -39,7 +39,7 @@ export default function ForOwners() {
             <div className="absolute bottom-6 right-6 left-6 rounded-2xl p-4 backdrop-blur-lg"
                  style={{ background: 'rgba(30,30,30,0.85)', border: '1px solid rgba(255,255,255,0.1)' }}>
               <div className="grid grid-cols-3 gap-4 text-center">
-                {['إدارة أسهل', 'فوضى أقل', 'استخدام أعلى'].map(l => (
+                {['إدارة أسهل', 'تنظيم أفضل', 'استخدام أعلى'].map(l => (
                   <p key={l} className="text-xs sm:text-sm font-bold" style={{ color: ORANGE }}>{l}</p>
                 ))}
               </div>
