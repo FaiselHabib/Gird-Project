@@ -36,6 +36,8 @@ const SOCIALS = [
 ]
 
 export default function Footer() {
+  const isHomePage = window.location.pathname === '/'
+
   return (
     <footer id="contact" className="pt-14 pb-8"
             style={{ background: '#0e0e0e', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
@@ -51,8 +53,11 @@ export default function Footer() {
           {/* Links */}
           <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-500">
             {LINKS.map(l => (
-              <a key={l.href} href={l.href} className="hover:text-white transition-colors">{l.label}</a>
+              <a key={l.href} href={isHomePage ? l.href : `/${l.href}`} className="hover:text-white transition-colors">{l.label}</a>
             ))}
+            <a href="/privacy-terms" className="hover:text-white transition-colors">
+              سياسة الخصوصية والشروط والأحكام
+            </a>
             <button
               type="button"
               onClick={() => openIntercom()}

@@ -11,11 +11,21 @@ import FAQ          from './components/landing/FAQ'
 import Footer       from './components/landing/Footer'
 import IntercomLauncher from './components/IntercomLauncher'
 import { initIntercom } from './lib/intercom'
+import Legal from './pages/Legal'
 
 export default function App() {
   useEffect(() => {
     initIntercom()
   }, [])
+
+  if (window.location.pathname.replace(/\/+$/, '') === '/privacy-terms') {
+    return (
+      <div style={{ fontFamily: "'IBM Plex Sans Arabic', system-ui, sans-serif" }}>
+        <Legal />
+        <IntercomLauncher />
+      </div>
+    )
+  }
 
   return (
     <div dir="rtl" className="min-h-screen"
