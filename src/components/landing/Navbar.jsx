@@ -5,6 +5,7 @@ import { YELLOW } from '../../lib/constants'
 const NAV = [
   { label: 'كيف يعمل',    href: '#how-it-works' },
   { label: 'للاعبين',     href: '#players' },
+  { label: 'للمجتمعات',   href: '#communities' },
   { label: 'للملاعب',      href: '#owners' },
   { label: 'التطبيق',      href: '#app' },
   { label: 'أسئلة شائعة',  href: '#faq' },
@@ -71,7 +72,7 @@ export default function Navbar() {
         </a>
 
         {/* Desktop links */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-6 lg:gap-8">
           {NAV.map(l => {
             const isActive = active === l.href.slice(1)
             return (

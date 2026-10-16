@@ -4,6 +4,7 @@ import Hero         from './components/landing/Hero'
 import SocialProof  from './components/landing/SocialProof'
 import HowItWorks   from './components/landing/HowItWorks'
 import ForPlayers   from './components/landing/ForPlayers'
+import Communities  from './components/landing/Communities'
 import ForOwners    from './components/landing/ForOwners'
 import AppPreview   from './components/landing/AppPreview'
 import WhyGird      from './components/landing/WhyGird'
@@ -36,6 +37,7 @@ export default function App() {
         <SocialProof />
         <HowItWorks />
         <ForPlayers />
+        <Communities />
         <ForOwners />
         <AppPreview />
         <WhyGird />

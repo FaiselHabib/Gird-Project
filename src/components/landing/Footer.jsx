@@ -3,6 +3,7 @@ import { INTERCOM_LAUNCHER_CLASS, openIntercom } from '../../lib/intercom'
 const LINKS = [
   { label: 'كيف يعمل',    href: '#how-it-works' },
   { label: 'للاعبين',     href: '#players' },
+  { label: 'للمجتمعات',   href: '#communities' },
   { label: 'للملاعب',      href: '#owners' },
   { label: 'التطبيق',      href: '#app' },
   { label: 'أسئلة شائعة',  href: '#faq' },
