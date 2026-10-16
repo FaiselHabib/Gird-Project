@@ -81,12 +81,41 @@ export default function Footer() {
           </div>
         </div>
 
+        <address
+          className="not-italic flex flex-wrap items-center justify-center gap-x-6 gap-y-2 pt-6 text-xs text-gray-600"
+          aria-label="بيانات التواصل الرسمية لقرد"
+        >
+          <span>
+            رقم التواصل:{' '}
+            <a href="tel:+966560909811" dir="ltr" className="hover:text-white transition-colors">
+              0560909811
+            </a>
+          </span>
+          <span>
+            البريد الإلكتروني:{' '}
+            <a href="mailto:admin@gird.sa" dir="ltr" className="hover:text-white transition-colors">
+              admin@gird.sa
+            </a>
+          </span>
+          <span>
+            الرقم الوطني الموحد: <span dir="ltr">7053458779</span>
+          </span>
+        </address>
+
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">
           <p className="text-xs text-gray-600">
             © 2026 قرد. جميع الحقوق محفوظة.
           </p>
           <p className="text-xs text-gray-600">
-            تم تطوير قرد بواسطة Smartech Group
+            تم تطوير قرد بواسطة{' '}
+            <a
+              href="https://smartechgroup.sa"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white transition-colors"
+            >
+              Smartech Group
+            </a>
           </p>
         </div>
       </div>
