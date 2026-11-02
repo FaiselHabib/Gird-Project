@@ -1,4 +1,5 @@
 import { BLUE, YELLOW } from '../../lib/constants'
+import StoreButtons from './StoreButtons'
 
 const SCREENS = [
   {
@@ -47,6 +48,7 @@ export default function AppPreview() {
           <p className="text-gray-400 text-base sm:text-lg max-w-xl mx-auto">
             من اكتشاف الملاعب والحجز إلى المباريات والبطولات — تجربة واحدة مصممة للعب.
           </p>
+          <StoreButtons className="mt-7" />
         </div>
 
         {/* Phone mockups — 4 cols on md+, 2 cols on sm, stacked on mobile */}
